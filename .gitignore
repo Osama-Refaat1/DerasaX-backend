@@ -52,3 +52,25 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+
+# =========================
+# IDE - Visual Studio
+# =========================
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# =========================
+# IDE - Visual Studio Code
+# =========================
+.vscode/
+*.code-workspace
+
+# =========================
+# OS Junk Files
+# =========================
+.DS_Store
+Thumbs.db
