@@ -1,2 +1,2 @@
-# edutera-backend
-Backend codebase for edutera platform
+# DrasaX-backend
+Backend codebase for DrasaX platform
