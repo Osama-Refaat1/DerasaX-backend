@@ -1,2 +1,2 @@
-# DrasaX-backend
-Backend codebase for DrasaX platform
+# DerasaX-backend
+Backend codebase for DerasaX platform
