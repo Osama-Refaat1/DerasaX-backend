@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
+    <Folder Include="Entities\Models\" />
     <Folder Include="interfaces\" />
+    <Folder Include="interfaces\IRepository\" />
     <Folder Include="Specification\" />
   </ItemGroup>
 
