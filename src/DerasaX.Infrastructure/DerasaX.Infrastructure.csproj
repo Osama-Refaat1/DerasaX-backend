@@ -2,7 +2,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DerasaX.Application\DerasaX.Application.csproj" />
-    <ProjectReference Include="..\DerasaX.Domain\DerasaX.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DbHelper\Context\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Specification\" />
   </ItemGroup>
 
   <PropertyGroup>

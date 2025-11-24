@@ -4,6 +4,13 @@
     <ProjectReference Include="..\DerasaX.Domain\DerasaX.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Dto\" />
+    <Folder Include="Services.Abstractions\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
