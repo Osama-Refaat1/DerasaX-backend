@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\Base\" />
-    <Folder Include="Entities\Models\" />
     <Folder Include="Interfaces\" />
-    <Folder Include="Enums\" />
     <Folder Include="Specification\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
   </ItemGroup>
 
 </Project>
