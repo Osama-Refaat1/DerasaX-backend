@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Lesson :BaseEntity
+    public class Lesson :BaseEntity 
     {
         public string Title { get; set; }
         public string Content { get; set; }
-        
-        [ForeignKey("Subject")]
-        public Guid SubjectId { get; set; }
-        public Subject Subject { get; set; }
-        public ICollection<LessonAttachment> Attachments { get; set; } = new HashSet<LessonAttachment>();
+
+        [ForeignKey("Unit")]
+        public string UnitId { get; set; }
+        public Unit Unit { get; set; }
+        public ICollection<LessonMaterial> materials { get; set; } = new HashSet<LessonMaterial>();
         public ICollection<Quiz> Quizzes { get; set; } = new HashSet<Quiz>();
         public ICollection<StudentLessonProgress> studentLessonProgresses { get; set; } = new HashSet<StudentLessonProgress>();
     }
 }
+
+

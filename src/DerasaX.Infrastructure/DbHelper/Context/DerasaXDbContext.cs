@@ -9,25 +9,86 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DerasaX.Infrastructure.configuration;
+using DerasaX.Domain.Entities.Base;
+using DerasaX.Application.Services.Abstractions;
 
 namespace DerasaX.Infrastructure.DbHelper.Context
 {
-    public class DerasaXDbContext(DbContextOptions<DerasaXDbContext> options): IdentityDbContext<ApplicationUser>(options)
+    public class DerasaXDbContext: IdentityDbContext<ApplicationUser>
     {
+        public string TenantId { get; set; }
+        private readonly ITenantService _tenantService;
+        public DerasaXDbContext(DbContextOptions options,ITenantService tenantService) : base(options)
+        {
+            _tenantService=tenantService;
+            TenantId =_tenantService.GetCurrentTenant()?.Id;
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Announcement>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<Grade>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<GradeSubject>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<Lesson>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<LessonMaterial>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<Notification>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<Post>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<Question>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<QuestionOption>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<Quiz>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<QuizGeneration>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<QuizSubmission>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<StudentInsight>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<StudentLessonProgress>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<Subject>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<SubmissionAnswer>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<SupportRequest>().HasQueryFilter(e => e.TenantId==TenantId);
+            builder.Entity<Unit>().HasQueryFilter(e => e.TenantId==TenantId);
+          
+
             base.OnModelCreating(builder);
-            builder.ApplySoftDeleteQueryFilter();
+           // builder.ApplySoftDeleteQueryFilter();
             builder.ApplyEnumToStringConversions();
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //Table Per Type
+            builder.Entity<Student>().ToTable("Student");
+            builder.Entity<Teacher>().ToTable("Teacher");
+            builder.Entity<Parent>().ToTable("Parent");
+            builder.Entity<SystemAdmin>().ToTable("SystemAdmin");
+            builder.Entity<SchoolAdmin>().ToTable("SchoolAdmin");
+            
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var tenantConnectionString = _tenantService.GetConnectionString();
+            if(!string.IsNullOrEmpty(tenantConnectionString))
+            {
+                var dbProvider = _tenantService.GetDatabaseProvider();
+                if(dbProvider?.ToLower()=="PostgreSQL")
+                {
+                    optionsBuilder.UseNpgsql(tenantConnectionString);
+                }
+            }
+        }
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach(var entry in ChangeTracker.Entries<IMustHaveTenant>().Where(e=>e.State==EntityState.Added))
+            {
+                entry.Entity.TenantId=TenantId;
+            }
+            return base.SaveChangesAsync(cancellationToken);
         }
         public DbSet<Announcement> announcements { get; set; }
         public DbSet<ApplicationUser> applicationUsers { get; set; }
-        public DbSet<Curriculums> curriculums { get; set; }
+        public DbSet<Student> students { get; set; }
+        public DbSet<Teacher> teachers { get; set; }
+        public DbSet<Parent> parents { get; set; }
+        public DbSet<SystemAdmin> systemAdmins { get; set; }
+        public DbSet<SchoolAdmin> SchoolAdmin { get; set; }
+        public DbSet<Unit> units { get; set; }
         public DbSet<Grade> grades { get; set; }
         public DbSet<GradeSubject> gradeSubjects { get; set; }
         public DbSet<Lesson> lessons { get; set; }
-        public DbSet<LessonAttachment> lessonAttachments { get; set; }
+        public DbSet<LessonMaterial> lessonMaterials { get; set; }
         public DbSet<Notification> notifications { get; set; }
         public DbSet<Post> posts { get; set; }
         public DbSet<Question> questions { get; set; }

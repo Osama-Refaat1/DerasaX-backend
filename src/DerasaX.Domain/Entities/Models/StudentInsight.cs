@@ -19,6 +19,6 @@ namespace DerasaX.Domain.Entities.Models
         public DateTime PeriodEnd { get; set; }
         [ForeignKey("Student")]
         public string StudentId { get; set; }
-        public ApplicationUser Student { get; set; }
+        public Student Student { get; set; }
     }
 }

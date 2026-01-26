@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DerasaX.Infrastructure.Migrations
 {
     [DbContext(typeof(DerasaXDbContext))]
-    [Migration("20251203145027_init")]
-    partial class init
+    [Migration("20260126013635_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,46 +25,30 @@ namespace DerasaX.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Announcement", b =>
+            modelBuilder.Entity("DerasaX.Domain.Entities.Base.BaseEntity", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Body")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("TargetRole")
+                    b.Property<string>("TenantId")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId");
+                    b.ToTable("BaseEntity");
 
-                    b.HasIndex("UserId");
+                    b.HasDiscriminator().HasValue("BaseEntity");
 
-                    b.ToTable("announcements");
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.ApplicationUser", b =>
@@ -79,9 +63,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -93,12 +74,8 @@ namespace DerasaX.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("GradeId")
-                        .HasColumnType("uuid");
+                    b.Property<int?>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
@@ -132,8 +109,9 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
@@ -148,8 +126,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GradeId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -160,571 +136,24 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
 
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Curriculums", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("curriculums");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Grade", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CurriculumId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CurriculumId");
-
-                    b.ToTable("grades");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.GradeSubject", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("GradeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("gradeSubjects");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Lesson", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("lessons");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.LessonAttachment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("LessonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.ToTable("lessonAttachments");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Notification", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ActionUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("ReadAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("notifications");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Post", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("CommentsCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("LikesCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("PhotoUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ViewsCount")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("posts");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Question", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("QuizId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.ToTable("questions");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.QuestionOption", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("questionOptions");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Quiz", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Difficulty")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("LessonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("TimeLimitMinutes")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.ToTable("quizzes");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.QuizGeneration", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("GeneratedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("PromptUsed")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("QuizId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.ToTable("quizGenerations");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.QuizSubmission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("QuizId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("TeacherFeedback")
-                        .HasColumnType("text");
-
-                    b.Property<int>("TotalScore")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("submissionStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("quizSubmissions");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentInsight", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<double>("ConfidenceScore")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("GeneratedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Performance")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Period")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("PeriodEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("PeriodStart")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("studentInsights");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentLessonProgress", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("LessonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("WatchedAttachments")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("studentLessonProgresses");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Subject", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("subjects");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SubmissionAnswer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("PointsEarned")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("QuizSubmissionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("SelectedOptionId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("QuizSubmissionId");
-
-                    b.HasIndex("SelectedOptionId");
-
-                    b.ToTable("submissionAnswers");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SupportRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("RespondedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ResponseMessage")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("supportRequests");
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Tenant", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
                     b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConnectionString")
                         .HasColumnType("text");
 
                     b.Property<string>("Domain")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("LogoUrl")
                         .HasColumnType("text");
@@ -737,6 +166,10 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SubscriptionPlan")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -879,58 +312,669 @@ namespace DerasaX.Infrastructure.Migrations
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Announcement", b =>
                 {
-                    b.HasOne("DerasaX.Domain.Entities.Models.Tenant", "Tenant")
-                        .WithMany("Announcements")
-                        .HasForeignKey("TenantId");
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
 
-                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", "User")
-                        .WithMany("Announcements")
-                        .HasForeignKey("UserId");
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Navigation("Tenant");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Navigation("User");
-                });
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
 
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("DerasaX.Domain.Entities.Models.Grade", "Grade")
-                        .WithMany("Users")
-                        .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
-                    b.HasOne("DerasaX.Domain.Entities.Models.Tenant", "Tenant")
-                        .WithMany("Users")
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("TargetAudience")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Navigation("Grade");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Curriculums", b =>
-                {
-                    b.HasOne("DerasaX.Domain.Entities.Models.Tenant", "Tenant")
-                        .WithMany("Curriculums")
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
+                    b.HasDiscriminator().HasValue("Announcement");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Grade", b =>
                 {
-                    b.HasOne("DerasaX.Domain.Entities.Models.Curriculums", "Curriculums")
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<string>("gradeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasDiscriminator().HasValue("Grade");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.GradeSubject", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<string>("GradeId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasDiscriminator().HasValue("GradeSubject");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Lesson", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UnitId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("Title")
+                                .HasColumnName("Lesson_Title");
+                        });
+
+                    b.HasDiscriminator().HasValue("Lesson");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.LessonMaterial", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<string>("LessonId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("Title")
+                                .HasColumnName("LessonMaterial_Title");
+                        });
+
+                    b.HasDiscriminator().HasValue("LessonMaterial");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Notification", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<string>("ActionUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("TargetAudience")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("notificationCategory")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("Body")
+                                .HasColumnName("Notification_Body");
+
+                            t.Property("TargetAudience")
+                                .HasColumnName("Notification_TargetAudience");
+
+                            t.Property("Title")
+                                .HasColumnName("Notification_Title");
+                        });
+
+                    b.HasDiscriminator().HasValue("Notification");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Post", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<int>("CommentsCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ViewsCount")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("Content")
+                                .HasColumnName("Post_Content");
+
+                            t.Property("CreatedAt")
+                                .HasColumnName("Post_CreatedAt");
+
+                            t.Property("UserId")
+                                .HasColumnName("Post_UserId");
+                        });
+
+                    b.HasDiscriminator().HasValue("Post");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Question", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("QuizId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("Type")
+                                .HasColumnName("Question_Type");
+                        });
+
+                    b.HasDiscriminator().HasValue("Question");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.QuestionOption", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("Text")
+                                .HasColumnName("QuestionOption_Text");
+                        });
+
+                    b.HasDiscriminator().HasValue("QuestionOption");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Quiz", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<string>("Difficulty")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LessonId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TimeLimitMinutes")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("LessonId")
+                                .HasColumnName("Quiz_LessonId");
+                        });
+
+                    b.HasDiscriminator().HasValue("Quiz");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.QuizGeneration", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PromptUsed")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("QuizId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("QuizId")
+                                .HasColumnName("QuizGeneration_QuizId");
+                        });
+
+                    b.HasDiscriminator().HasValue("QuizGeneration");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.QuizSubmission", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<int>("AchievedScore")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("QuizId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TeacherFeedback")
+                        .HasColumnType("text");
+
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("submissionStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("QuizId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("QuizId")
+                                .HasColumnName("QuizSubmission_QuizId");
+                        });
+
+                    b.HasDiscriminator().HasValue("QuizSubmission");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentInsight", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<double>("ConfidenceScore")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Performance")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Period")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("GeneratedAt")
+                                .HasColumnName("StudentInsight_GeneratedAt");
+
+                            t.Property("StudentId")
+                                .HasColumnName("StudentInsight_StudentId");
+                        });
+
+                    b.HasDiscriminator().HasValue("StudentInsight");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentLessonProgress", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LessonId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("LessonId")
+                                .HasColumnName("StudentLessonProgress_LessonId");
+
+                            t.Property("StudentId")
+                                .HasColumnName("StudentLessonProgress_StudentId");
+                        });
+
+                    b.HasDiscriminator().HasValue("StudentLessonProgress");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Subject", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasDiscriminator().HasValue("Subject");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SubmissionAnswer", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("PointsEarned")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("QuizSubmissionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SelectedOptionId")
+                        .HasColumnType("text");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("QuizSubmissionId");
+
+                    b.HasIndex("SelectedOptionId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("IsCorrect")
+                                .HasColumnName("SubmissionAnswer_IsCorrect");
+
+                            t.Property("QuestionId")
+                                .HasColumnName("SubmissionAnswer_QuestionId");
+                        });
+
+                    b.HasDiscriminator().HasValue("SubmissionAnswer");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SupportRequest", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RespondedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ResponseMessage")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("CreatedAt")
+                                .HasColumnName("SupportRequest_CreatedAt");
+
+                            t.Property("Type")
+                                .HasColumnName("SupportRequest_Type");
+
+                            t.Property("UserId")
+                                .HasColumnName("SupportRequest_UserId");
+                        });
+
+                    b.HasDiscriminator().HasValue("SupportRequest");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Unit", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Base.BaseEntity");
+
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("BaseEntity", t =>
+                        {
+                            t.Property("SubjectId")
+                                .HasColumnName("Unit_SubjectId");
+
+                            t.Property("Title")
+                                .HasColumnName("Unit_Title");
+                        });
+
+                    b.HasDiscriminator().HasValue("Unit");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Parent", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Models.ApplicationUser");
+
+                    b.ToTable("Parent", (string)null);
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SchoolAdmin", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Models.ApplicationUser");
+
+                    b.ToTable("SchoolAdmin", (string)null);
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Student", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Models.ApplicationUser");
+
+                    b.Property<string>("GradeId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasIndex("GradeId");
+
+                    b.ToTable("Student", (string)null);
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SystemAdmin", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Models.ApplicationUser");
+
+                    b.ToTable("SystemAdmin", (string)null);
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Teacher", b =>
+                {
+                    b.HasBaseType("DerasaX.Domain.Entities.Models.ApplicationUser");
+
+                    b.ToTable("Teacher", (string)null);
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("DerasaX.Domain.Entities.Models.Tenant", "Tenant")
                         .WithMany()
-                        .HasForeignKey("CurriculumId")
+                        .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Curriculums");
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.GradeSubject", b =>
@@ -954,19 +998,19 @@ namespace DerasaX.Infrastructure.Migrations
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Lesson", b =>
                 {
-                    b.HasOne("DerasaX.Domain.Entities.Models.Subject", "Subject")
+                    b.HasOne("DerasaX.Domain.Entities.Models.Unit", "Unit")
                         .WithMany("Lessons")
-                        .HasForeignKey("SubjectId")
+                        .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Subject");
+                    b.Navigation("Unit");
                 });
 
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.LessonAttachment", b =>
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.LessonMaterial", b =>
                 {
                     b.HasOne("DerasaX.Domain.Entities.Models.Lesson", "Lesson")
-                        .WithMany("Attachments")
+                        .WithMany("materials")
                         .HasForeignKey("LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -978,22 +1022,20 @@ namespace DerasaX.Infrastructure.Migrations
                 {
                     b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", "User")
                         .WithMany("notifications")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Post", b =>
                 {
-                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", "Student")
+                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", "User")
                         .WithMany("posts")
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Student");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Question", b =>
@@ -1048,7 +1090,7 @@ namespace DerasaX.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", "Student")
+                    b.HasOne("DerasaX.Domain.Entities.Models.Student", "Student")
                         .WithMany("quizSubmissions")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1061,7 +1103,7 @@ namespace DerasaX.Infrastructure.Migrations
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentInsight", b =>
                 {
-                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", "Student")
+                    b.HasOne("DerasaX.Domain.Entities.Models.Student", "Student")
                         .WithMany("studentInsights")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1078,7 +1120,7 @@ namespace DerasaX.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", "Student")
+                    b.HasOne("DerasaX.Domain.Entities.Models.Student", "Student")
                         .WithMany("studentLessonProgresses")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1125,70 +1167,75 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Unit", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
+                    b.HasOne("DerasaX.Domain.Entities.Models.Subject", "Subject")
+                        .WithMany("Units")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Parent", b =>
+                {
+                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("DerasaX.Domain.Entities.Models.Parent", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SchoolAdmin", b =>
                 {
                     b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("DerasaX.Domain.Entities.Models.SchoolAdmin", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Student", b =>
+                {
+                    b.HasOne("DerasaX.Domain.Entities.Models.Grade", "Grade")
+                        .WithMany("students")
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("DerasaX.Domain.Entities.Models.Student", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grade");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SystemAdmin", b =>
                 {
                     b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("DerasaX.Domain.Entities.Models.SystemAdmin", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Teacher", b =>
                 {
                     b.HasOne("DerasaX.Domain.Entities.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("DerasaX.Domain.Entities.Models.Teacher", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Announcements");
-
                     b.Navigation("notifications");
 
                     b.Navigation("posts");
-
-                    b.Navigation("quizSubmissions");
-
-                    b.Navigation("studentInsights");
-
-                    b.Navigation("studentLessonProgresses");
 
                     b.Navigation("supportRequests");
                 });
@@ -1197,14 +1244,14 @@ namespace DerasaX.Infrastructure.Migrations
                 {
                     b.Navigation("GradeSubjects");
 
-                    b.Navigation("Users");
+                    b.Navigation("students");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Lesson", b =>
                 {
-                    b.Navigation("Attachments");
-
                     b.Navigation("Quizzes");
+
+                    b.Navigation("materials");
 
                     b.Navigation("studentLessonProgresses");
                 });
@@ -1237,16 +1284,21 @@ namespace DerasaX.Infrastructure.Migrations
                 {
                     b.Navigation("GradeSubjects");
 
+                    b.Navigation("Units");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Unit", b =>
+                {
                     b.Navigation("Lessons");
                 });
 
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Tenant", b =>
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Student", b =>
                 {
-                    b.Navigation("Announcements");
+                    b.Navigation("quizSubmissions");
 
-                    b.Navigation("Curriculums");
+                    b.Navigation("studentInsights");
 
-                    b.Navigation("Users");
+                    b.Navigation("studentLessonProgresses");
                 });
 #pragma warning restore 612, 618
         }

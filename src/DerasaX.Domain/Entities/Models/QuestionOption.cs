@@ -13,7 +13,7 @@ namespace DerasaX.Domain.Entities.Models
         public string Text { get; set; }
         public bool IsCorrect { get; set; } = false;
         [ForeignKey("Question")]
-        public Guid QuestionId { get; set; }
+        public string QuestionId { get; set; }
         public Question Question { get; set; }
         public ICollection<SubmissionAnswer> SubmissionAnswers { get; set; } = new HashSet<SubmissionAnswer>();
     }

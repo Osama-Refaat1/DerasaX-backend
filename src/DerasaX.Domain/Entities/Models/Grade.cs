@@ -1,8 +1,10 @@
 ﻿using DerasaX.Domain.Entities.Base;
+using DerasaX.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,11 +12,8 @@ namespace DerasaX.Domain.Entities.Models
 {
     public class Grade :BaseEntity
     {
-        public string Name { get; set; }
-        [ForeignKey("Curriculums")]
-        public Guid CurriculumId { get; set; }
-        public Curriculums Curriculums { get; set; }
-        public ICollection<ApplicationUser> Users { get; set; } = new HashSet<ApplicationUser>();
+        public GradeType gradeType { get; set; }
+        public ICollection<Student> students { get; set; } = new HashSet<Student>();
         public ICollection<GradeSubject> GradeSubjects { get; set; } = new HashSet<GradeSubject>();
     }
 }

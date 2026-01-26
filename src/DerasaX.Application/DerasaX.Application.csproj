@@ -3,12 +3,17 @@
   <ItemGroup>
     <ProjectReference Include="..\DerasaX.Domain\DerasaX.Domain.csproj" />
   </ItemGroup>
+	<ItemGroup>
+  <FrameworkReference Include="Microsoft.AspNetCore.App" />
+</ItemGroup>
+	
 
-  <ItemGroup>
+
+	
+		
+	<ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="Dto\" />
-    <Folder Include="Services.Abstractions\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -12,12 +12,12 @@ namespace DerasaX.Domain.Entities.Models
     {
         public bool IsCompleted { get; set; } = false;
         public DateTime? CompletedAt { get; set; }
-        public int WatchedAttachments { get; set; } = 0;
+       // public int WatchedAttachments { get; set; } = 0;
         [ForeignKey("Student")]
         public string StudentId { get; set; }
-        public ApplicationUser Student { get; set; }
+        public Student Student { get; set; }
         [ForeignKey("Lesson")]
-        public Guid LessonId { get; set; }
+        public string LessonId { get; set; }
         public Lesson Lesson { get; set; }
 
     }

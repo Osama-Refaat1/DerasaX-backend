@@ -13,13 +13,13 @@ namespace DerasaX.Domain.Entities.Models
         public bool IsCorrect { get; set; }             
         public int PointsEarned { get; set; } = 0;
         [ForeignKey("Question")]
-        public Guid QuestionId { get; set; }
+        public string QuestionId { get; set; }
         public Question Question { get; set; }
         [ForeignKey("QuizSubmission")]
-        public Guid QuizSubmissionId { get; set; }
+        public string QuizSubmissionId { get; set; }
         public QuizSubmission QuizSubmission { get; set; }
         [ForeignKey("SelectedOption")]
-        public Guid? SelectedOptionId { get; set; }
+        public string? SelectedOptionId { get; set; }
         public QuestionOption? SelectedOption { get; set; }
 
     }

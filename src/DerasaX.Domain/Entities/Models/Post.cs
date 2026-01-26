@@ -11,14 +11,13 @@ namespace DerasaX.Domain.Entities.Models
     public class Post :BaseEntity
     {
         public string? PhotoUrl { get; set; }
-        public string Title { get; set; } 
         public string Content { get; set; } 
         public int LikesCount { get; set; } = 0;
         public int CommentsCount { get; set; } = 0;
         public int ViewsCount { get; set; } = 0;     
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        [ForeignKey("Student")]
-        public string StudentId { get; set; }
-        public ApplicationUser Student { get; set; }
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }

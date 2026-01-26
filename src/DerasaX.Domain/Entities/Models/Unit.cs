@@ -1,5 +1,4 @@
 ﻿using DerasaX.Domain.Entities.Base;
-using DerasaX.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class LessonAttachment :BaseEntity
+    public class Unit :BaseEntity
     {
         public string Title { get; set; }
-        public string Url { get; set; }
-        public AttachmentType Type { get; set; }
-        [ForeignKey("Lesson")]
-        public Guid LessonId { get; set; }
-        public Lesson Lesson { get; set; }
+
+        [ForeignKey("Subject")]
+        public string SubjectId { get; set; }
+        public Subject Subject { get; set; }
+
+        public ICollection<Lesson> Lessons { get; set; } = new HashSet<Lesson>();
     }
 }

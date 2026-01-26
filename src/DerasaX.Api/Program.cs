@@ -10,6 +10,7 @@ builder.Services.AddAllServices(builder.Configuration);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+builder.Services.AddHttpContextAccessor();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

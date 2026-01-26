@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Enums
 {
+    [Flags]
     public enum TargetAudience
     {
-        All=1,
-        Students=2,
-        Parents=3,
-        Teachers=4
+        None = 0,
+        Students = 1,
+        Parents = 2,
+        Teachers = 4,
+        All = Students | Parents | Teachers
     }
 }

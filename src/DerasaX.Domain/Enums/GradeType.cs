@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Enums
 {
-    public enum AttachmentType
+    public enum GradeType
     {
-        Video=1,
-        Document=2,     
-        Image=3,
-        Slides=4,        
-        Audio=5
+        Grade7 = 1,
+        Grade8 = 2,
+        Grade9 = 3,
+        Grade10 = 4,
+        Grade11 = 5,
+        Grade12 = 6
     }
 }

@@ -13,22 +13,37 @@ namespace DerasaX.Domain.Entities.Models
     {
         public string FullName { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public UserRole UserRole { get; set; }
-        public bool IsDeleted { get; set; } = false;
-        public Gender Gender { get; set; }
         [ForeignKey("Tenant")]
-        public Guid TenantId { get; set; }
+        public string TenantId { get; set; }
         public Tenant Tenant { get; set; }
-        [ForeignKey("Grade")]
-        public Guid GradeId { get; set; }
-        public Grade Grade { get; set; }
-        public ICollection<QuizSubmission> quizSubmissions { get; set; } = new HashSet<QuizSubmission>();
-        public ICollection<StudentLessonProgress> studentLessonProgresses { get; set; } = new HashSet<StudentLessonProgress>();
-        public ICollection<StudentInsight> studentInsights { get; set; } = new HashSet<StudentInsight>();
+        public bool IsDeleted { get; set; } = false;
+        public Gender? Gender { get; set; }
         public ICollection<Post> posts { get; set; } = new HashSet<Post>();
         public ICollection<Notification> notifications { get; set; } = new HashSet<Notification>();
         public ICollection<SupportRequest> supportRequests { get; set; } = new HashSet<SupportRequest>();
-        public ICollection<Announcement> Announcements { get; set; } = new HashSet<Announcement>();
     }
+    public class Student:ApplicationUser
+    {
+        [ForeignKey("Grade")]
+        public string GradeId { get; set; }
+        public Grade Grade { get; set; }
+        public ICollection<StudentInsight> studentInsights { get; set; } = new HashSet<StudentInsight>();
+        public ICollection<StudentLessonProgress> studentLessonProgresses { get; set; } = new HashSet<StudentLessonProgress>();
+        public ICollection<QuizSubmission> quizSubmissions { get; set; } = new HashSet<QuizSubmission>();
+
+    }
+    public class Teacher : ApplicationUser
+    {
+    }
+    public class Parent : ApplicationUser
+    {
+    }
+    public class SchoolAdmin : ApplicationUser
+    {
+    }
+    public class SystemAdmin:ApplicationUser
+    {
+    }
+
 }

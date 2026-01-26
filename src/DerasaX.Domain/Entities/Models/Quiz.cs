@@ -11,11 +11,11 @@ namespace DerasaX.Domain.Entities.Models
 {
     public class Quiz:BaseEntity
     {
-        public DifficultyLevel Difficulty { get; set; }
+        public DifficultyLevel Difficulty { get; set; } = DifficultyLevel.Core;
         public DateTime? DueDate { get; set; }
         public int TimeLimitMinutes { get; set; } = 30;
         [ForeignKey("Lesson")]
-        public Guid LessonId { get; set; }
+        public string LessonId { get; set; }
         public Lesson Lesson { get; set; }
         public ICollection<Question> Questions { get; set; } = new HashSet<Question>();
         public ICollection<QuizSubmission> QuizSubmissions { get; set; } = new HashSet<QuizSubmission>();

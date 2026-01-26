@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Announcement :BaseEntity
+    public class LessonMaterial : BaseEntity 
     {
         public string Title { get; set; }
-        public string Body { get; set; }
-        public TargetAudience TargetAudience { get; set; } = TargetAudience.All;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? ExpiresAt { get; set; }
-        public bool IsActive { get; set; } = true;
+        public string Url { get; set; }
+        public AttachmentType Type { get; set; }
+        [ForeignKey("Lesson")]
+        public string LessonId { get; set; }
+        public Lesson Lesson { get; set; }
     }
 }

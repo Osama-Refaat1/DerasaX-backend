@@ -10,6 +10,7 @@ namespace DerasaX.Domain.Enums
     {
         MCQ=1,
         TrueFalse=2,
-        MultiSelec=3    
+        MultiSelect = 3,
+        Essay = 4
     }
 }
