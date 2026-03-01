@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class LessonMaterial : BaseEntity 
+    public class LessonMaterial : BaseEntity<string>
     {
         public string Title { get; set; }
         public string Url { get; set; }

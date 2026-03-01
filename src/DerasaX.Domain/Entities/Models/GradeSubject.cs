@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class GradeSubject :BaseEntity
+    public class GradeSubject :BaseEntity<string>
     {
         [ForeignKey("Grade")]
         public string GradeId { get; set; }

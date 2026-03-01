@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class QuizSubmission :BaseEntity
+    public class QuizSubmission :BaseEntity<string>
     {
         public int AchievedScore { get; set; }        
         public int TotalScore { get; set; }      

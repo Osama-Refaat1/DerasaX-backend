@@ -3,6 +3,7 @@ using System;
 using DerasaX.Infrastructure.DbHelper.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DerasaX.Infrastructure.Migrations
 {
     [DbContext(typeof(DerasaXDbContext))]
-    partial class DerasaXDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260228190417_updatebaseEntity")]
+    partial class updatebaseEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,8 +59,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("announcements");
                 });
@@ -169,8 +170,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId");
-
                     b.ToTable("grades");
                 });
 
@@ -200,8 +199,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.HasIndex("TenantId");
-
                     b.ToTable("gradeSubjects");
                 });
 
@@ -230,8 +227,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
 
                     b.HasIndex("UnitId");
 
@@ -269,8 +264,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LessonId");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("lessonMaterials");
                 });
@@ -312,8 +305,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
 
                     b.HasIndex("UserId");
 
@@ -357,8 +348,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("posts");
@@ -398,8 +387,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.HasIndex("TenantId");
-
                     b.ToTable("questions");
                 });
 
@@ -429,8 +416,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("questionOptions");
                 });
@@ -465,8 +450,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.HasIndex("TenantId");
-
                     b.ToTable("quizzes");
                 });
 
@@ -496,8 +479,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("QuizId");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("quizGenerations");
                 });
@@ -544,8 +525,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("TenantId");
-
                     b.ToTable("quizSubmissions");
                 });
 
@@ -589,8 +568,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("TenantId");
-
                     b.ToTable("studentInsights");
                 });
 
@@ -626,8 +603,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("TenantId");
-
                     b.ToTable("studentLessonProgresses");
                 });
 
@@ -654,8 +629,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("subjects");
                 });
@@ -696,8 +669,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("QuizSubmissionId");
 
                     b.HasIndex("SelectedOptionId");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("submissionAnswers");
                 });
@@ -741,8 +712,6 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("supportRequests");
@@ -754,6 +723,9 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConnectionString")
                         .HasColumnType("text");
 
                     b.Property<string>("Domain")
@@ -806,8 +778,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SubjectId");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("units");
                 });

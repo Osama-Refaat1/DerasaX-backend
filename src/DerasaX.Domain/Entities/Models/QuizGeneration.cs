@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class QuizGeneration :BaseEntity 
+    public class QuizGeneration :BaseEntity<string>
     {
         public string PromptUsed { get; set; }
         public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;

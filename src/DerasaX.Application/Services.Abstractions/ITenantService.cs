@@ -9,8 +9,6 @@ namespace DerasaX.Application.Services.Abstractions
 {
     public interface ITenantService
     {
-        public string? GetDatabaseProvider();
-        public string? GetConnectionString();
         public Tenant? GetCurrentTenant();
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Post :BaseEntity
+    public class Post :BaseEntity<string>
     {
         public string? PhotoUrl { get; set; }
         public string Content { get; set; } 

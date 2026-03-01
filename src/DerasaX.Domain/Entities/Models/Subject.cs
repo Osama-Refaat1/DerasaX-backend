@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Subject :BaseEntity
+    public class Subject :BaseEntity<string>
     {
         public string Name { get; set; }
         public string? Description { get; set; }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class SupportRequest : BaseEntity
+    public class SupportRequest : BaseEntity<string>
     {
         public RequestType Type { get; set; }
         public RequestStatus Status { get; set; } = RequestStatus.Pending;

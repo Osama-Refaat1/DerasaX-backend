@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Question :BaseEntity
+    public class Question :BaseEntity<string>
     {
         public string Text { get; set; } 
         public QuestionType Type { get; set; }

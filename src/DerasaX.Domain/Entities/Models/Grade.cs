@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Grade :BaseEntity
+    public class Grade :BaseEntity<string>
     {
         public GradeType gradeType { get; set; }
         public ICollection<Student> students { get; set; } = new HashSet<Student>();

@@ -17,6 +17,5 @@ namespace DerasaX.Domain.Entities.Models
         public string? Address { get; set; }
         public string? Phone { get; set; }
         public CurriculumType Type { get; set; }
-        public string? ConnectionString { get; set; }
     }
 }
