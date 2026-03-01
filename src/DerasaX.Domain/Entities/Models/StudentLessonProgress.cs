@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class StudentLessonProgress:BaseEntity
+    public class StudentLessonProgress:BaseEntity<string>
     {
         public bool IsCompleted { get; set; } = false;
         public DateTime? CompletedAt { get; set; }

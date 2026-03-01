@@ -11,42 +11,25 @@ using System.Threading.Tasks;
 using DerasaX.Infrastructure.configuration;
 using DerasaX.Domain.Entities.Base;
 using DerasaX.Application.Services.Abstractions;
+using System.Linq.Expressions;
 
 namespace DerasaX.Infrastructure.DbHelper.Context
 {
     public class DerasaXDbContext: IdentityDbContext<ApplicationUser>
     {
-        public string TenantId { get; set; }
+        
         private readonly ITenantService _tenantService;
         public DerasaXDbContext(DbContextOptions options,ITenantService tenantService) : base(options)
         {
             _tenantService=tenantService;
-            TenantId =_tenantService.GetCurrentTenant()?.Id;
+            
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Announcement>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<Grade>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<GradeSubject>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<Lesson>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<LessonMaterial>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<Notification>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<Post>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<Question>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<QuestionOption>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<Quiz>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<QuizGeneration>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<QuizSubmission>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<StudentInsight>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<StudentLessonProgress>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<Subject>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<SubmissionAnswer>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<SupportRequest>().HasQueryFilter(e => e.TenantId==TenantId);
-            builder.Entity<Unit>().HasQueryFilter(e => e.TenantId==TenantId);
-          
-
+            
             base.OnModelCreating(builder);
-           // builder.ApplySoftDeleteQueryFilter();
+            ApplyTenantQueryFilter(builder);
+            // builder.ApplySoftDeleteQueryFilter();
             builder.ApplyEnumToStringConversions();
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             //Table Per Type
@@ -55,25 +38,58 @@ namespace DerasaX.Infrastructure.DbHelper.Context
             builder.Entity<Parent>().ToTable("Parent");
             builder.Entity<SystemAdmin>().ToTable("SystemAdmin");
             builder.Entity<SchoolAdmin>().ToTable("SchoolAdmin");
-            
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var tenantConnectionString = _tenantService.GetConnectionString();
-            if(!string.IsNullOrEmpty(tenantConnectionString))
+
+            foreach (var entityType in builder.Model.GetEntityTypes())
             {
-                var dbProvider = _tenantService.GetDatabaseProvider();
-                if(dbProvider?.ToLower()=="PostgreSQL")
+                if (typeof(IMustHaveTenant).IsAssignableFrom(entityType.ClrType))
                 {
-                    optionsBuilder.UseNpgsql(tenantConnectionString);
+                     builder.Entity(entityType.ClrType)
+                     .HasIndex("TenantId");
                 }
             }
+        }
+        private void ApplyTenantQueryFilter(ModelBuilder builder)
+        {
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                if (typeof(IMustHaveTenant).IsAssignableFrom(entityType.ClrType))
+                {
+                    builder.Entity(entityType.ClrType)
+                        .HasQueryFilter(CreateTenantFilterExpression(entityType.ClrType));
+                }
+            }
+        }
+        private LambdaExpression CreateTenantFilterExpression(Type entityType)
+        {
+            var parameter = Expression.Parameter(entityType, "e");
+
+            var tenantProperty = Expression.Property(parameter, "TenantId");
+
+            var tenantServiceExpression =
+                Expression.Constant(this);
+
+            var currentTenantMethod =
+                typeof(DerasaXDbContext)
+                .GetMethod(nameof(GetCurrentTenantId),
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+
+            var tenantIdExpression =
+                Expression.Call(tenantServiceExpression, currentTenantMethod);
+
+            var body = Expression.Equal(tenantProperty, tenantIdExpression);
+
+            return Expression.Lambda(body, parameter);
+        }
+        private string GetCurrentTenantId()
+        {
+            var tenant = _tenantService.GetCurrentTenant();
+            return tenant?.Id ?? throw new Exception("Tenant is required.");
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach(var entry in ChangeTracker.Entries<IMustHaveTenant>().Where(e=>e.State==EntityState.Added))
             {
-                entry.Entity.TenantId=TenantId;
+                entry.Entity.TenantId = _tenantService.GetCurrentTenant().Id;
             }
             return base.SaveChangesAsync(cancellationToken);
         }

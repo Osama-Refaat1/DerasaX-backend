@@ -6,58 +6,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DerasaX.Domain.Settings;
 using Microsoft.Extensions.Options;
 
 namespace DerasaX.Application.Services
 {
     public class TenantService : ITenantService
     {
-        private readonly TenantSettings _tenantSettings;
-        private HttpContext? _HttpContext;
         private Tenant? _currentTenant;
-        public TenantService(IHttpContextAccessor httpContextAccessor,IOptions<TenantSettings> tenantSettings )
+        public TenantService(IHttpContextAccessor httpContextAccessor)
         {
-            _HttpContext=httpContextAccessor.HttpContext;
-            _tenantSettings=tenantSettings.Value;
-            if(_HttpContext is not null)
+            var context = httpContextAccessor.HttpContext;
+            if (context != null && context.Request.Headers.TryGetValue("tenant", out var tenantId))
             {
-                if (_HttpContext.Request.Headers.TryGetValue("tenant", out var tenantId))
-                {
-                    SetCurrentTenant(tenantId!);
-                }
-                else
-                {
-                    throw new Exception("No tenant provided");
-                }
+                _currentTenant = new Tenant { Id = tenantId };
             }
-        }
-        public string? GetConnectionString()
-        {
-            var currentConnectionString = _currentTenant is null
-                ? _tenantSettings.Defaults.ConnectionString
-                :_currentTenant.ConnectionString;
-            return currentConnectionString;
+            else
+            {
+                throw new Exception("Tenant header is required");
+            }
         }
         public Tenant? GetCurrentTenant()
         {
             return _currentTenant;
-        }
-        public string? GetDatabaseProvider()
-        {
-            return _tenantSettings.Defaults.DBProvider;
-        }
-        private void SetCurrentTenant(string tenantId)
-        {
-            _currentTenant= _tenantSettings.Tenants.FirstOrDefault(t => t.Id==tenantId);
-            if (_currentTenant is null)
-            {
-                throw new Exception("Invalid Tenant Id");
-            }
-            if (string.IsNullOrEmpty(_currentTenant.ConnectionString))
-            {
-                _currentTenant.ConnectionString=_tenantSettings.Defaults.ConnectionString;
-            }
         }
     }
 }

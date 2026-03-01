@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Base
 {
-    public class BaseEntity: IMustHaveTenant
+    public class BaseEntity<Tkey>: IMustHaveTenant
     {
-        public string Id { get; set; }
-       
+        public Tkey Id { get; set; }
         public bool IsDeleted { get; set; } = false;
         public string TenantId { get; set; } 
     }

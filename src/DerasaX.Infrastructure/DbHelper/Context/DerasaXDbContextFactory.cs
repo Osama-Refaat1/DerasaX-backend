@@ -24,8 +24,7 @@ namespace DerasaX.Infrastructure.DbHelper.Context
         public class DummyTenantService : ITenantService
         {
             public Tenant? GetCurrentTenant() => new Tenant { Id = "DefaultTenantId" };
-            public string? GetConnectionString() => "Host=ep-summer-moon-ahxdjit9-pooler.c-3.us-east-1.aws.neon.tech;Port=5432; Database=neondb; Username=neondb_owner; Password=npg_4jps2JucaCHD; SSL Mode=Require; Trust Server Certificate=true ";
-            public string? GetDatabaseProvider() => "PostgreSQL";
+            
         }
     }
 }

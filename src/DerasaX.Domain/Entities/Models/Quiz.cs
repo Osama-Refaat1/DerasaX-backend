@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Quiz:BaseEntity
+    public class Quiz:BaseEntity<string>
     {
         public DifficultyLevel Difficulty { get; set; } = DifficultyLevel.Core;
         public DateTime? DueDate { get; set; }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class StudentInsight :BaseEntity
+    public class StudentInsight :BaseEntity<string>
     {
         public PerformanceLevel Performance { get; set; }
         public double ConfidenceScore { get; set; }

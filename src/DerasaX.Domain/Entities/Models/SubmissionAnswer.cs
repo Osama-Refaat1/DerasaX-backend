@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class SubmissionAnswer :BaseEntity
+    public class SubmissionAnswer :BaseEntity<string>
     {
         public bool IsCorrect { get; set; }             
         public int PointsEarned { get; set; } = 0;
