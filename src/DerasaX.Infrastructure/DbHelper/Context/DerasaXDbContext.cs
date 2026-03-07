@@ -15,20 +15,11 @@ using System.Linq.Expressions;
 
 namespace DerasaX.Infrastructure.DbHelper.Context
 {
-    public class DerasaXDbContext: IdentityDbContext<ApplicationUser>
+    public class DerasaXDbContext(DbContextOptions<DerasaXDbContext> options): IdentityDbContext<ApplicationUser>(options)
     {
-        
-        private readonly ITenantService _tenantService;
-        public DerasaXDbContext(DbContextOptions options,ITenantService tenantService) : base(options)
-        {
-            _tenantService=tenantService;
-            
-        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            
             base.OnModelCreating(builder);
-            ApplyTenantQueryFilter(builder);
             // builder.ApplySoftDeleteQueryFilter();
             builder.ApplyEnumToStringConversions();
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -47,51 +38,6 @@ namespace DerasaX.Infrastructure.DbHelper.Context
                      .HasIndex("TenantId");
                 }
             }
-        }
-        private void ApplyTenantQueryFilter(ModelBuilder builder)
-        {
-            foreach (var entityType in builder.Model.GetEntityTypes())
-            {
-                if (typeof(IMustHaveTenant).IsAssignableFrom(entityType.ClrType))
-                {
-                    builder.Entity(entityType.ClrType)
-                        .HasQueryFilter(CreateTenantFilterExpression(entityType.ClrType));
-                }
-            }
-        }
-        private LambdaExpression CreateTenantFilterExpression(Type entityType)
-        {
-            var parameter = Expression.Parameter(entityType, "e");
-
-            var tenantProperty = Expression.Property(parameter, "TenantId");
-
-            var tenantServiceExpression =
-                Expression.Constant(this);
-
-            var currentTenantMethod =
-                typeof(DerasaXDbContext)
-                .GetMethod(nameof(GetCurrentTenantId),
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-
-            var tenantIdExpression =
-                Expression.Call(tenantServiceExpression, currentTenantMethod);
-
-            var body = Expression.Equal(tenantProperty, tenantIdExpression);
-
-            return Expression.Lambda(body, parameter);
-        }
-        private string GetCurrentTenantId()
-        {
-            var tenant = _tenantService.GetCurrentTenant();
-            return tenant?.Id ?? throw new Exception("Tenant is required.");
-        }
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            foreach(var entry in ChangeTracker.Entries<IMustHaveTenant>().Where(e=>e.State==EntityState.Added))
-            {
-                entry.Entity.TenantId = _tenantService.GetCurrentTenant().Id;
-            }
-            return base.SaveChangesAsync(cancellationToken);
         }
         public DbSet<Announcement> announcements { get; set; }
         public DbSet<ApplicationUser> applicationUsers { get; set; }

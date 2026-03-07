@@ -12,9 +12,10 @@
 	
 		
 	<ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="Dto\" />
-  </ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
+	</ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
