@@ -10,6 +10,10 @@ namespace DerasaX.Domain.Enums
     {
         General,
         Warning,
-        Informational
+        Informational,
+        QuizAssigned,
+        QuizGraded,
+        DeadlineReminder,
+        Announcement
     }
 }

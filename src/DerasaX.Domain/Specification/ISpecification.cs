@@ -30,5 +30,7 @@ namespace DerasaX.Domain.Specification
         /// </summary>
         Expression<Func<TEntity, object>> OrderByDescending { get; set; }
 
+        int? Skip { get; }
+        int? Take { get; }
     }
 }

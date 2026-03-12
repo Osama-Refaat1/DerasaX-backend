@@ -13,10 +13,12 @@ namespace DerasaX.Domain.Interfaces.RepositoriesInterfaces
         Task<TEntity> GetByIdAsync(TKey id);
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task AddAsync(TEntity entity);
+        Task AddRangeAsync(IEnumerable<TEntity> entities);
         void Update(TEntity entity);
         void Delete(TEntity entity);
         //specification methods
         Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity, TKey> specification);
         Task<TEntity> GetByIdWithSpecAsync(ISpecification<TEntity, TKey> specification);
+        Task<int> CountAsync(ISpecification<TEntity, TKey> specification);
     }
 }

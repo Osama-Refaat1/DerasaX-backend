@@ -1,6 +1,9 @@
 ﻿using DerasaX.Application.Extensions;
 using DerasaX.Application.Services;
 using DerasaX.Application.Services.Abstractions;
+using DerasaX.Application.Services.Abstractions.Notification;
+using DerasaX.Application.Services.Notification;
+using DerasaX.Api.Realtime;
 using DerasaX.Domain.Entities.Models;
 using DerasaX.Infrastructure.DbHelper.Context;
 using DerasaX.Infrastructure.Extensions;
@@ -18,6 +21,9 @@ namespace DerasaX.Api.Helper
     .AddDefaultTokenProviders();
 
             services.AddApplicationServices(configuration);
+            services.AddScoped<IRealtimeSender, SignalRSender>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddSignalR();
             return services;
         }
     }

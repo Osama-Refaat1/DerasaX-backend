@@ -1,24 +1,22 @@
 ﻿
+using DerasaX.Domain.Interfaces;
 using DerasaX.Infrastructure.DbHelper.Context;
+using DerasaX.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DerasaX.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContextServices(configuration);
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
+
         private static void AddDbContextServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<DerasaXDbContext>(options =>

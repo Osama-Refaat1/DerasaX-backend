@@ -1,25 +1,22 @@
 ﻿using DerasaX.Domain.Entities.Base;
 using DerasaX.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Notification :BaseEntity<string>
+    public class Notification : BaseEntity<string>
     {
-        public string Title { get; set; }        
-        public string Body { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty;
         public string? ActionUrl { get; set; }
-        public NotificationCategory notificationCategory { get; set; }
+        public NotificationCategory NotificationCategory { get; set; }
+        public NotificationType NotificationType { get; set; } = NotificationType.System;
         public bool IsRead { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string? MetadataJson { get; set; }
+
         [ForeignKey("User")]
         public string? UserId { get; set; }
-        public ApplicationUser User { get; set; }
-        public TargetAudience? TargetAudience { get; set; }
+        public ApplicationUser? User { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace DerasaX.Infrastructure.Repositories
             _dbSet = _context.Set<TEntity>();
         }
         public async Task AddAsync(TEntity entity) => await _dbSet.AddAsync(entity);
+        public async Task AddRangeAsync(IEnumerable<TEntity> entities) => await _dbSet.AddRangeAsync(entities);
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
@@ -48,6 +49,11 @@ namespace DerasaX.Infrastructure.Repositories
         {
             return await ApplySpecification(specification).FirstOrDefaultAsync();
         }
+        public async Task<int> CountAsync(ISpecification<TEntity, TKey> specification)
+        {
+            return await ApplySpecification(specification).CountAsync();
+        }
+
         private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity, TKey> specification)
         {
             return SpecificationEvaluator<TEntity, TKey>.GetQuery(_dbSet.AsQueryable(), specification);

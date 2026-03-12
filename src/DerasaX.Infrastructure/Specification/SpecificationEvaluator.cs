@@ -29,6 +29,13 @@ namespace DerasaX.Infrastructure.Specification
             {
                 query = query.OrderByDescending(specification.OrderByDescending);
             }
+
+            if (specification.Skip.HasValue)
+                query = query.Skip(specification.Skip.Value);
+
+            if (specification.Take.HasValue)
+                query = query.Take(specification.Take.Value);
+
             return query;
 
         }
