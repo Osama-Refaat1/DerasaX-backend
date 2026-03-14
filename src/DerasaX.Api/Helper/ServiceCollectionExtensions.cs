@@ -17,13 +17,15 @@ namespace DerasaX.Api.Helper
         {
             services.AddInfrastructureServices(configuration);
             services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<DerasaXDbContext>()
-    .AddDefaultTokenProviders();
+                    .AddEntityFrameworkStores<DerasaXDbContext>()
+                    .AddDefaultTokenProviders();
 
             services.AddApplicationServices(configuration);
             services.AddScoped<IRealtimeSender, SignalRSender>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddSignalR();
+
+
             return services;
         }
     }

@@ -5,7 +5,7 @@
 namespace DerasaX.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class updatebaseEntity : Migration
+    public partial class AddAllModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

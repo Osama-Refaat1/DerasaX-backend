@@ -121,6 +121,12 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("SecurityAnswerHash")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("SecurityQuestionId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -143,6 +149,8 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("SecurityQuestionId");
 
                     b.HasIndex("TenantId");
 
@@ -560,6 +568,23 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("quizSubmissions");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SecurityQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecurityQuestions");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentInsight", b =>
@@ -1000,6 +1025,10 @@ namespace DerasaX.Infrastructure.Migrations
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.ApplicationUser", b =>
                 {
+                    b.HasOne("DerasaX.Domain.Entities.Models.SecurityQuestion", "SecurityQuestion")
+                        .WithMany()
+                        .HasForeignKey("SecurityQuestionId");
+
                     b.HasOne("DerasaX.Domain.Entities.Models.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
@@ -1037,6 +1066,8 @@ namespace DerasaX.Infrastructure.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");
                         });
+
+                    b.Navigation("SecurityQuestion");
 
                     b.Navigation("Tenant");
 

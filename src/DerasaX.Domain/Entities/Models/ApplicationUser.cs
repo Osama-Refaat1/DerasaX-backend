@@ -13,7 +13,9 @@ namespace DerasaX.Domain.Entities.Models
     {
         public string FullName { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
-        //public UserRole UserRole { get; set; }
+        public int? SecurityQuestionId { get; set; }
+        public string? SecurityAnswerHash { get; set; }
+        public SecurityQuestion SecurityQuestion { get; set; }
         public string LoginCode { get; set; }
         [ForeignKey("Tenant")]
         public string TenantId { get; set; }
