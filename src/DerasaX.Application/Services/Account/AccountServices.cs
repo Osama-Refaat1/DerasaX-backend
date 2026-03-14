@@ -140,7 +140,7 @@ namespace DerasaX.Application.Services.Account
             }.Union(UserClaims)
             .Union(RoleClaims);
 
-            var SecretKeyString = _configuration.GetSection("SecratKey").Value;
+            var SecretKeyString = _configuration.GetSection("SecretKey").Value;
             var SecreteKeyBytes = Encoding.UTF8.GetBytes(SecretKeyString);
             SecurityKey securityKey = new SymmetricSecurityKey(SecreteKeyBytes);
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
