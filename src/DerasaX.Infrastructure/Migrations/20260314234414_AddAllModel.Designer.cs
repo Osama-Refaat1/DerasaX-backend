@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DerasaX.Infrastructure.Migrations
 {
     [DbContext(typeof(DerasaXDbContext))]
-    [Migration("20260228190417_updatebaseEntity")]
-    partial class updatebaseEntity
+    [Migration("20260314234414_AddAllModel")]
+    partial class AddAllModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("announcements");
                 });
 
@@ -101,6 +103,10 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("LoginCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -118,6 +124,12 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("SecurityAnswerHash")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("SecurityQuestionId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -132,10 +144,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<string>("UserRole")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -144,6 +152,8 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("SecurityQuestionId");
 
                     b.HasIndex("TenantId");
 
@@ -169,6 +179,8 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("grades");
                 });
@@ -199,6 +211,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("gradeSubjects");
                 });
 
@@ -227,6 +241,8 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("UnitId");
 
@@ -265,6 +281,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("LessonId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("lessonMaterials");
                 });
 
@@ -280,14 +298,25 @@ namespace DerasaX.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsRead")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("TargetAudience")
-                        .HasColumnType("integer");
+                    b.Property<string>("MetadataJson")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NotificationCategory")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NotificationType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("TenantId")
                         .IsRequired()
@@ -300,13 +329,17 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.Property<string>("notificationCategory")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("IsRead");
+
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "IsRead");
 
                     b.ToTable("notifications");
                 });
@@ -348,6 +381,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("posts");
@@ -387,6 +422,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("QuizId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("questions");
                 });
 
@@ -416,6 +453,8 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("questionOptions");
                 });
@@ -450,6 +489,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("LessonId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("quizzes");
                 });
 
@@ -479,6 +520,8 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("QuizId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("quizGenerations");
                 });
@@ -525,7 +568,26 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("quizSubmissions");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SecurityQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecurityQuestions");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentInsight", b =>
@@ -568,6 +630,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("studentInsights");
                 });
 
@@ -603,6 +667,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("studentLessonProgresses");
                 });
 
@@ -629,6 +695,8 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("subjects");
                 });
@@ -669,6 +737,8 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("QuizSubmissionId");
 
                     b.HasIndex("SelectedOptionId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("submissionAnswers");
                 });
@@ -712,6 +782,8 @@ namespace DerasaX.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("supportRequests");
@@ -723,9 +795,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Address")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ConnectionString")
                         .HasColumnType("text");
 
                     b.Property<string>("Domain")
@@ -778,6 +847,8 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SubjectId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("units");
                 });
@@ -957,13 +1028,53 @@ namespace DerasaX.Infrastructure.Migrations
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.ApplicationUser", b =>
                 {
+                    b.HasOne("DerasaX.Domain.Entities.Models.SecurityQuestion", "SecurityQuestion")
+                        .WithMany()
+                        .HasForeignKey("SecurityQuestionId");
+
                     b.HasOne("DerasaX.Domain.Entities.Models.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsMany("DerasaX.Domain.Entities.Models.RefreshToken", "refreshTokens", b1 =>
+                        {
+                            b1.Property<string>("ApplicationUserId")
+                                .HasColumnType("text");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<DateTime>("CreatedOn")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<DateTime>("ExpiresOn")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<DateTime?>("RevokedOn")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<string>("Token")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("ApplicationUserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationUserId");
+                        });
+
+                    b.Navigation("SecurityQuestion");
+
                     b.Navigation("Tenant");
+
+                    b.Navigation("refreshTokens");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.GradeSubject", b =>

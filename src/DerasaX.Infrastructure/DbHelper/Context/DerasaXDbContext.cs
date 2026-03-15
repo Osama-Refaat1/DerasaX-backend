@@ -64,5 +64,7 @@ namespace DerasaX.Infrastructure.DbHelper.Context
         public DbSet<SubmissionAnswer> submissionAnswers { get; set; }
         public DbSet<SupportRequest> supportRequests { get; set; }
         public DbSet<Tenant> tenants { get; set; }
+        public DbSet<SecurityQuestion> SecurityQuestions { get; set; }
+
     }
 }

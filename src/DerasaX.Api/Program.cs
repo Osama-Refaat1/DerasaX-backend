@@ -1,5 +1,8 @@
 using DerasaX.Api.Helper;
 using DerasaX.Api.Hubs;
+using DerasaX.Domain.Entities.Models;
+using DerasaX.Infrastructure.DbHelper.Context;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,5 +34,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");
+//// === Seed Data ===
+//using (var scope = app.Services.CreateScope())
+//{
+//    var context = scope.ServiceProvider.GetRequiredService<DerasaXDbContext>();
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+//    await SeedData.InitializeAsync(context, userManager);
+//}
 
 app.Run();
