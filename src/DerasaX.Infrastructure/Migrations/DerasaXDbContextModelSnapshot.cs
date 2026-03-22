@@ -178,22 +178,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("grades");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "grade-1",
-                            IsDeleted = false,
-                            TenantId = "tenant-1",
-                            gradeType = "Grade8"
-                        },
-                        new
-                        {
-                            Id = "grade-2",
-                            IsDeleted = false,
-                            TenantId = "tenant-1",
-                            gradeType = "Grade9"
-                        });
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.GradeSubject", b =>
@@ -597,26 +581,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("SecurityQuestions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IsDeleted = false,
-                            Question = "What was your childhood nickname?"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IsDeleted = false,
-                            Question = "What is your mother's maiden name?"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IsDeleted = false,
-                            Question = "In which city were you born?"
-                        });
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentInsight", b =>
@@ -846,18 +810,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tenants");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "tenant-1",
-                            Address = "Cairo, Egypt",
-                            Domain = "alnour.derasax.com",
-                            Name = "Al Nour School",
-                            Phone = "0201000000001",
-                            SubscriptionPlan = "Pro",
-                            Type = "Egyptian"
-                        });
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Unit", b =>
