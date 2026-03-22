@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "MyProject": {
+    "DerasaX": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -24,13 +24,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-
-      "applicationUrl": "http://localhost:51934/",
-      "sslPort": 44368
-
-      "applicationUrl": "http://localhost:53782/",
-      "sslPort": 44358
-
+      "applicationUrl": "http://localhost:5155/",
+      "sslPort": 7281
     }
   }
 }

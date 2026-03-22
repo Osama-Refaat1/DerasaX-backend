@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DerasaX.Infrastructure.Migrations
 {
     [DbContext(typeof(DerasaXDbContext))]
-    [Migration("20260314234414_AddAllModel")]
-    partial class AddAllModel
+    [Migration("20260316045011_seedData")]
+    partial class seedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -588,6 +588,23 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SecurityQuestions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Question = "What was your childhood nickname?"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Question = "What is your mother's maiden name?"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Question = "In which city were you born?"
+                        });
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentInsight", b =>
