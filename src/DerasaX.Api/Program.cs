@@ -1,5 +1,6 @@
 using DerasaX.Api.Helper;
 using DerasaX.Api.Hubs;
+using DerasaX.Api.SeedData;
 using DerasaX.Domain.Entities.Models;
 using DerasaX.Infrastructure.DbHelper.Context;
 using Microsoft.AspNetCore.Identity;
@@ -34,13 +35,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");
-//// === Seed Data ===
-//using (var scope = app.Services.CreateScope())
-//{
-//    var context = scope.ServiceProvider.GetRequiredService<DerasaXDbContext>();
-//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<DataSeederService>();
+    var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
-//    await SeedData.InitializeAsync(context, userManager);
-//}
+    // Path to the folder containing JSON files
+    var seedDataPath = Path.Combine(app.Environment.ContentRootPath, "SeedData");
+
+    await seeder.SeedAllAsync(seedDataPath);
+}
 
 app.Run();
+

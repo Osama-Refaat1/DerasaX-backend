@@ -132,7 +132,6 @@ namespace DerasaX.Application.Services.Account
             {
                 new Claim(JwtRegisteredClaimNames.Sub,user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email,user.Email),
                 new Claim("uid",user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim("tenantId", user.TenantId),

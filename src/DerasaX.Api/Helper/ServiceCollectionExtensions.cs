@@ -8,6 +8,8 @@ using DerasaX.Domain.Entities.Models;
 using DerasaX.Infrastructure.DbHelper.Context;
 using DerasaX.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
+using DerasaX.Api.SeedData;
+
 
 namespace DerasaX.Api.Helper
 {
@@ -24,6 +26,7 @@ namespace DerasaX.Api.Helper
             services.AddScoped<IRealtimeSender, SignalRSender>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddSignalR();
+            services.AddScoped<DataSeederService>();
 
 
             return services;

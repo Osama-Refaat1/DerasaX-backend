@@ -14,6 +14,7 @@ namespace DerasaX.Infrastructure.Extensions
         {
             services.AddDbContextServices(configuration);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+           
             return services;
         }
 

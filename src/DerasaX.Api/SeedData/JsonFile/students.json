@@ -1,0 +1,12 @@
+﻿[
+  {
+    "FullName": "Omar Ahmed",
+    "UserName": "omar.ahmed",
+    "GradeId": "G7-ID",
+    "TenantId": "tenant-1",
+    "Gender": 1,
+    "LoginCode": "ST-001",
+    "SecurityQuestionId": 1,
+    "SecurityAnswerHash": "hashed_answer"
+  }
+]

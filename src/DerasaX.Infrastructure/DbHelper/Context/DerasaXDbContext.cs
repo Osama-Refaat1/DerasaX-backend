@@ -1,7 +1,6 @@
 ﻿using DerasaX.Domain.Entities.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using DerasaX.Infrastructure.SeedData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +40,7 @@ namespace DerasaX.Infrastructure.DbHelper.Context
                      .HasIndex("TenantId");
                 }
             }
-            //SeedDataApp.Seed(builder);
+            
         }
         public DbSet<Announcement> announcements { get; set; }
         public DbSet<ApplicationUser> applicationUsers { get; set; }
