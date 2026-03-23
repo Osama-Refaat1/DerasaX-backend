@@ -20,6 +20,8 @@ namespace DerasaX.Infrastructure.DbHelper.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            
+
             // builder.ApplySoftDeleteQueryFilter();
             builder.ApplyEnumToStringConversions();
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -38,6 +40,7 @@ namespace DerasaX.Infrastructure.DbHelper.Context
                      .HasIndex("TenantId");
                 }
             }
+            
         }
         public DbSet<Announcement> announcements { get; set; }
         public DbSet<ApplicationUser> applicationUsers { get; set; }

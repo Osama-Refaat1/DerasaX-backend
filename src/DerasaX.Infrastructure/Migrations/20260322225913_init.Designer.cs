@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DerasaX.Infrastructure.Migrations
 {
     [DbContext(typeof(DerasaXDbContext))]
-    [Migration("20260314234414_AddAllModel")]
-    partial class AddAllModel
+    [Migration("20260322225913_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
@@ -171,7 +170,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("gradeType")
@@ -202,7 +200,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -229,7 +226,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
@@ -262,7 +258,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
@@ -319,7 +314,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
@@ -369,7 +363,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
@@ -407,7 +400,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Text")
@@ -443,7 +435,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Text")
@@ -479,7 +470,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("TimeLimitMinutes")
@@ -514,7 +504,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -552,7 +541,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("TotalScore")
@@ -581,11 +569,19 @@ namespace DerasaX.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("SecurityQuestions");
                 });
@@ -623,7 +619,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -658,7 +653,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -691,7 +685,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -727,7 +720,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -769,7 +761,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
@@ -837,7 +828,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")

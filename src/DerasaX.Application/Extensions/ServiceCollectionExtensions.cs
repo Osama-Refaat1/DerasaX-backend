@@ -1,5 +1,7 @@
 ﻿using DerasaX.Application.Services.Abstractions.Account;
+using DerasaX.Application.Services.Abstractions.SecurityQuestions;
 using DerasaX.Application.Services.Account;
+using DerasaX.Application.Services.SecurityQuestions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +28,7 @@ namespace DerasaX.Application.Extensions
         public static IServiceCollection RegisterApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAccountServices, AccountServices>();
+            services.AddScoped<ISecurityQuestionService, SecurityQuestionService>();
             return services;
         }
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)

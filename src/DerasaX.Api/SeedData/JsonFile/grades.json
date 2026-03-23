@@ -1,0 +1,12 @@
+﻿[
+  {
+    "Id": "G7-ID",
+    "gradeType": 1,
+    "TenantId": "tenant-1"
+  },
+  {
+    "Id": "G8-ID",
+    "gradeType": 2,
+    "TenantId": "tenant-1"
+  }
+]

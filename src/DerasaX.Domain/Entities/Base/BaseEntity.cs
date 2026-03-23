@@ -13,6 +13,6 @@ namespace DerasaX.Domain.Entities.Base
     {
         public Tkey Id { get; set; }
         public bool IsDeleted { get; set; } = false;
-        public string TenantId { get; set; } 
+        public string? TenantId { get; set; } 
     }
 }

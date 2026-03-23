@@ -7,6 +7,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="SeedData\JsonFile\grades.json" />
+    <Content Remove="SeedData\JsonFile\securityQuestions.json" />
+    <Content Remove="SeedData\JsonFile\students.json" />
+    <Content Remove="SeedData\JsonFile\tenants.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="SeedData\JsonFile\grades.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SeedData\JsonFile\securityQuestions.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SeedData\JsonFile\students.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SeedData\JsonFile\tenants.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
