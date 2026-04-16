@@ -32,5 +32,6 @@ namespace DerasaX.Domain.Specification
 
         int? Skip { get; }
         int? Take { get; }
+        
     }
 }

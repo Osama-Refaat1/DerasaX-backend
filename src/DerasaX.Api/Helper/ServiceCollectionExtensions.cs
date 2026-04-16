@@ -29,6 +29,7 @@ namespace DerasaX.Api.Helper
             services.AddScoped<DataSeederService>();
 
 
+
             return services;
         }
     }
