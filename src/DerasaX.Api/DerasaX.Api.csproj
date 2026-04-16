@@ -44,4 +44,8 @@
     <ProjectReference Include="..\DerasaX.Infrastructure\DerasaX.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
 </Project>

@@ -40,7 +40,8 @@ namespace DerasaX.Infrastructure.DbHelper.Context
                      .HasIndex("TenantId");
                 }
             }
-            
+           
+            //builder.Entity<GradeSubject>().HasIndex(gs => new { gs.GradeId, gs.SubjectId, gs.TenantId }).IsUnique();
         }
         public DbSet<Announcement> announcements { get; set; }
         public DbSet<ApplicationUser> applicationUsers { get; set; }

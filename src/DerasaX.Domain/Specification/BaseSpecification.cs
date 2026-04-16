@@ -18,6 +18,7 @@ namespace DerasaX.Domain.Specification
         public Expression<Func<TEntity, object>> OrderByDescending { get; set; }
         public int? Skip { get; private set; }
         public int? Take { get; private set; }
+        
 
         public BaseSpecification() { }
 
@@ -39,11 +40,15 @@ namespace DerasaX.Domain.Specification
         {
             OrderByDescending = orderByDescExpression;
         }
-
-        protected void ApplyPaging(int skip, int take)
+        protected void ApplyPaging(int pageNumber, int pageSize)
         {
-            Skip = skip;
-            Take = take;
+            Skip = Math.Max((pageNumber - 1) * pageSize, 0);
+            Take = pageSize;
         }
+        //protected void ApplyPaging(int skip, int take)
+        //{
+        //    Skip = skip;
+        //    Take = take;
+        //}
     }
 }

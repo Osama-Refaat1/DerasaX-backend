@@ -19,6 +19,7 @@ namespace DerasaX.Infrastructure.Specification
             {
                 query = query.Where(specification.Criteria);
             }
+           
             query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
 
             if (specification.OrderBy != null)

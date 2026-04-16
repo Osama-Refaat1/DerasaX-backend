@@ -1,4 +1,5 @@
 ﻿using DerasaX.Domain.Entities.Base;
+using DerasaX.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DerasaX.Domain.Entities.Models
 {
-    public class Subject :BaseEntity<string>
+    public class Subject :BaseEntity<string>,IHasImageUrl
     {
         public string Name { get; set; }
         public string? Description { get; set; }

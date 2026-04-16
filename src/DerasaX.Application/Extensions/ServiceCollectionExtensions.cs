@@ -1,7 +1,11 @@
 ﻿using DerasaX.Application.Services.Abstractions.Account;
 using DerasaX.Application.Services.Abstractions.SecurityQuestions;
+using DerasaX.Application.Services.Abstractions.Subject;
 using DerasaX.Application.Services.Account;
+using DerasaX.Application.Services.Image.FileServices;
 using DerasaX.Application.Services.SecurityQuestions;
+using DerasaX.Application.Services.Subjects;
+using DerasaX.Application.Services.Subjects.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +27,15 @@ namespace DerasaX.Application.Extensions
         {
             services.RegisterApplicationServices(configuration);
             services.AddJwtAuthentication(configuration);
+
+            
+            services.AddHttpContextAccessor();
+
+            services.AddAutoMapperServices();
+            
+            
+            services.AddScoped<SubjectPictureUrlResolver>();
+
             // Register FluentValidation
             return services;
         }
@@ -29,6 +43,8 @@ namespace DerasaX.Application.Extensions
         {
             services.AddScoped<IAccountServices, AccountServices>();
             services.AddScoped<ISecurityQuestionService, SecurityQuestionService>();
+            services.AddScoped<ISubjectServices, SubjectServices>();
+            services.AddScoped<IFileService, FileService>();
             return services;
         }
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -97,5 +113,11 @@ namespace DerasaX.Application.Extensions
         });
             return services;
         }
+        private static void AddAutoMapperServices(this IServiceCollection services)
+        {
+            var applicationsAssembly = Assembly.GetExecutingAssembly();
+            services.AddAutoMapper(applicationsAssembly);
+        }
+
     }
 }
