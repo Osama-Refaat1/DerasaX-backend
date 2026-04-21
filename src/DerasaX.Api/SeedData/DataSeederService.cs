@@ -22,8 +22,8 @@ namespace DerasaX.Api.SeedData
             // Seed Tenants
             await SeedFile<Tenant>(Path.Combine(jsonFolderPath, "tenants.json"), _context.tenants);
 
-            // Seed Security Questions
-            await SeedFile<SecurityQuestion>(Path.Combine(jsonFolderPath, "securityQuestions.json"), _context.SecurityQuestions);
+            await SeedAdmin();
+            await SeedTeachers();
 
             // Seed Grades
             await SeedFile<Grade>(Path.Combine(jsonFolderPath, "grades.json"), _context.grades);
@@ -43,19 +43,93 @@ namespace DerasaX.Api.SeedData
                 await _context.SaveChangesAsync();
             }
         }
-
         private async Task SeedStudents(string path)
         {
             if (await _context.students.AnyAsync()) return;
+
             var data = await File.ReadAllTextAsync(path);
-            var students = JsonSerializer.Deserialize<List<Student>>(data);
+
+            var students = JsonSerializer.Deserialize<List<ApplicationUser>>(data);
+
+            if (students == null) return;
 
             foreach (var s in students)
             {
                 s.EmailConfirmed = true;
-                // Password will be 'P@ssword123' by default
-                await _userManager.CreateAsync(s, "P@ssword123");
+
+                // 1- Create Identity User
+                var result = await _userManager.CreateAsync(s, "P@ssword123");
+
+                if (!result.Succeeded)
+                    continue;
+
+                // 2- Assign Role
+                await _userManager.AddToRoleAsync(s, "students");
+
+                // 3- TPT mapping
+                _context.students.Add(new Student
+                {
+                    Id = s.Id
+                });
             }
+
+            await _context.SaveChangesAsync();
         }
+        private async Task SeedAdmin()
+        {
+            if (await _context.SchoolAdmin.AnyAsync()) return;
+
+            var admin = new ApplicationUser
+            {
+                UserName = "admin",
+                FullName = "System Admin",
+                LoginCode = "27102004",
+                Gender =(Domain.Enums.Gender?)1,
+                TenantId = "tenant-1"
+
+            };
+
+            var result = await _userManager.CreateAsync(admin, "Admin@123");
+
+            if (!result.Succeeded)
+                return;
+
+            await _userManager.AddToRoleAsync(admin, "SchoolAdmin");
+
+            _context.SchoolAdmin.Add(new SchoolAdmin
+            {
+                Id = admin.Id
+            });
+
+            await _context.SaveChangesAsync();
+        }
+        private async Task SeedTeachers()
+        {
+            if (await _context.teachers.AnyAsync()) return;
+
+            var teacher = new ApplicationUser
+            {
+                UserName = "teacher1",
+                FullName = "Dr Ahmed",
+                LoginCode = "TEACH001",
+                TenantId = "tenant-1",
+                Gender =(Domain.Enums.Gender?)1,
+            };
+
+            var result = await _userManager.CreateAsync(teacher, "Teacher@123");
+
+            if (!result.Succeeded)
+                return;
+
+            await _userManager.AddToRoleAsync(teacher, "teachers");
+
+            _context.teachers.Add(new Teacher
+            {
+                Id = teacher.Id
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

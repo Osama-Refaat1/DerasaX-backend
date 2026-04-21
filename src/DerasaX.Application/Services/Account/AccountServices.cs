@@ -127,6 +127,7 @@ namespace DerasaX.Application.Services.Account
             foreach (var Rolename in Roles)
             {
                 RoleClaims.Add(new Claim(ClaimTypes.Role, Rolename));
+                RoleClaims.Add(new Claim("role", Rolename));
             }
             var Claims = new[]
             {
