@@ -1,9 +1,7 @@
 ﻿using DerasaX.Application.Services.Abstractions.Account;
-using DerasaX.Application.Services.Abstractions.SecurityQuestions;
 using DerasaX.Application.Services.Abstractions.Subject;
 using DerasaX.Application.Services.Account;
 using DerasaX.Application.Services.Image.FileServices;
-using DerasaX.Application.Services.SecurityQuestions;
 using DerasaX.Application.Services.Subjects;
 using DerasaX.Application.Services.Subjects.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,7 +40,7 @@ namespace DerasaX.Application.Extensions
         public static IServiceCollection RegisterApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAccountServices, AccountServices>();
-            services.AddScoped<ISecurityQuestionService, SecurityQuestionService>();
+            
             services.AddScoped<ISubjectServices, SubjectServices>();
             services.AddScoped<IFileService, FileService>();
             return services;
