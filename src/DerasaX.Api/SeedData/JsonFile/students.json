@@ -6,5 +6,13 @@
     "TenantId": "tenant-1",
     "Gender": 1,
     "LoginCode": "ST-001"
+  },
+  {
+    "FullName": "nada Ashraf",
+    "UserName": "nada.ashraf",
+    "GradeId": "G7-ID",
+    "TenantId": "tenant-1",
+    "Gender": 1,
+    "LoginCode": "ST-002"
   }
 ]
