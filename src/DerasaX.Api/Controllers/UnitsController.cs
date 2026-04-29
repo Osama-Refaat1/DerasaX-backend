@@ -18,10 +18,10 @@ namespace DerasaX.Api.Controllers
             _logger=logger;
         }
         [HttpGet("GetUnitsBySubjectId")]
-        //[AllowAnonymous] // Public endpoint - anyone can view hotels by region
+        //[AllowAnonymous] // Public endpoint 
         public async Task<IActionResult> GetUnitsBySubjectId(string id)
         {
-            _logger.LogInformation("Getting hotels by region ID: {RegionId}", id);
+            _logger.LogInformation("Getting Unit by Subject ID: {subjectId}", id);
 
             var result = await _unitServices.GetUnitBySubjectIdAsync(id);
 
@@ -30,7 +30,7 @@ namespace DerasaX.Api.Controllers
         }
 
         [HttpPost("AddUnit")]
-        //[Authorize(Roles = "Admin")] // Only Admin can add hotels
+        //[Authorize(Roles = "Admin")] 
         public async Task<IActionResult> AddUnit([FromForm] AddUnitDto addUnitDto)
         {
             _logger.LogInformation("Adding new Unit: {UnitName}", addUnitDto.Title);
@@ -43,19 +43,19 @@ namespace DerasaX.Api.Controllers
         }
 
         [HttpPut("UpdateUnit")]
-        //[Authorize(Roles = "Admin")] // Only Admin can update hotels
+        //[Authorize(Roles = "Admin")] 
         public async Task<IActionResult> UpdateUnit([FromForm] UpdateUnitDto updateUnitDto)
         {
             _logger.LogInformation("Updating unit with ID: {unitId}", updateUnitDto.Id);
 
             var result = await _unitServices.UpdateUnitAsync(updateUnitDto);
 
-            _logger.LogInformation("Successfully updated hotel with ID: {HotelId}", updateUnitDto.Id);
+            _logger.LogInformation("Successfully updated Unit with ID: {unitId}", updateUnitDto.Id);
             return Ok(result);
         }
 
         [HttpDelete("DeleteUnit")]
-        //[Authorize(Roles = "Admin")] // Only Admin can delete hotels
+        //[Authorize(Roles = "Admin")] 
         public async Task<IActionResult> DeleteUnit(string id)
         {
             _logger.LogInformation("Deleting unit with ID: {unitId}", id);

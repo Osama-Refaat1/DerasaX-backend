@@ -1,8 +1,10 @@
 ﻿using DerasaX.Application.Services.Abstractions.Account;
+using DerasaX.Application.Services.Abstractions.Lesson;
 using DerasaX.Application.Services.Abstractions.Subject;
 using DerasaX.Application.Services.Abstractions.Unit;
 using DerasaX.Application.Services.Account;
 using DerasaX.Application.Services.Image.FileServices;
+using DerasaX.Application.Services.Lessons;
 using DerasaX.Application.Services.Subjects;
 using DerasaX.Application.Services.Subjects.Mapping;
 using DerasaX.Application.Services.Units;
@@ -45,6 +47,7 @@ namespace DerasaX.Application.Extensions
             
             services.AddScoped<ISubjectServices, SubjectServices>();
             services.AddScoped<IUnitServices, UnitServices>();
+            services.AddScoped<ILessonServices, LessonServices>();
             services.AddScoped<IFileService, FileService>();
             return services;
         }
