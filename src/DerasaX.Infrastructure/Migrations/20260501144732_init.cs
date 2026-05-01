@@ -50,44 +50,13 @@ namespace DerasaX.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    gradeType = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     TenantId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_grades", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SecurityQuestions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Question = table.Column<string>(type: "text", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    TenantId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SecurityQuestions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "subjects",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    ImageUrl = table.Column<string>(type: "text", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    TenantId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_subjects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,49 +99,24 @@ namespace DerasaX.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "gradeSubjects",
+                name: "subjects",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    ImageUrl = table.Column<string>(type: "text", nullable: true),
                     GradeId = table.Column<string>(type: "text", nullable: false),
-                    SubjectId = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     TenantId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_gradeSubjects", x => x.Id);
+                    table.PrimaryKey("PK_subjects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_gradeSubjects_grades_GradeId",
+                        name: "FK_subjects_grades_GradeId",
                         column: x => x.GradeId,
                         principalTable: "grades",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_gradeSubjects_subjects_SubjectId",
-                        column: x => x.SubjectId,
-                        principalTable: "subjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "units",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    SubjectId = table.Column<string>(type: "text", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    TenantId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_units", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_units_subjects_SubjectId",
-                        column: x => x.SubjectId,
-                        principalTable: "subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -184,8 +128,6 @@ namespace DerasaX.Infrastructure.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
-                    SecurityQuestionId = table.Column<int>(type: "integer", nullable: true),
-                    SecurityAnswerHash = table.Column<string>(type: "text", nullable: true),
                     LoginCode = table.Column<string>(type: "text", nullable: false),
                     TenantId = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
@@ -209,11 +151,6 @@ namespace DerasaX.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_SecurityQuestions_SecurityQuestionId",
-                        column: x => x.SecurityQuestionId,
-                        principalTable: "SecurityQuestions",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_AspNetUsers_tenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "tenants",
@@ -222,23 +159,22 @@ namespace DerasaX.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "lessons",
+                name: "units",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
-                    Content = table.Column<string>(type: "text", nullable: false),
-                    UnitId = table.Column<string>(type: "text", nullable: false),
+                    SubjectId = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     TenantId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_lessons", x => x.Id);
+                    table.PrimaryKey("PK_units", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_lessons_units_UnitId",
-                        column: x => x.UnitId,
-                        principalTable: "units",
+                        name: "FK_units_subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -523,6 +459,54 @@ namespace DerasaX.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "lessons",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    UnitId = table.Column<string>(type: "text", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    TenantId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_lessons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_lessons_units_UnitId",
+                        column: x => x.UnitId,
+                        principalTable: "units",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "studentInsights",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Performance = table.Column<string>(type: "text", nullable: false),
+                    ConfidenceScore = table.Column<double>(type: "double precision", nullable: false),
+                    Period = table.Column<string>(type: "text", nullable: false),
+                    GeneratedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PeriodStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PeriodEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    StudentId = table.Column<string>(type: "text", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    TenantId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_studentInsights", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_studentInsights_Student_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Student",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "lessonMaterials",
                 columns: table => new
                 {
@@ -564,32 +548,6 @@ namespace DerasaX.Infrastructure.Migrations
                         name: "FK_quizzes_lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "lessons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "studentInsights",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Performance = table.Column<string>(type: "text", nullable: false),
-                    ConfidenceScore = table.Column<double>(type: "double precision", nullable: false),
-                    Period = table.Column<string>(type: "text", nullable: false),
-                    GeneratedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PeriodStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PeriodEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    StudentId = table.Column<string>(type: "text", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    TenantId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_studentInsights", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_studentInsights_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -795,11 +753,6 @@ namespace DerasaX.Infrastructure.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_SecurityQuestionId",
-                table: "AspNetUsers",
-                column: "SecurityQuestionId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_TenantId",
                 table: "AspNetUsers",
                 column: "TenantId");
@@ -813,21 +766,6 @@ namespace DerasaX.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_grades_TenantId",
                 table: "grades",
-                column: "TenantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_gradeSubjects_GradeId",
-                table: "gradeSubjects",
-                column: "GradeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_gradeSubjects_SubjectId",
-                table: "gradeSubjects",
-                column: "SubjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_gradeSubjects_TenantId",
-                table: "gradeSubjects",
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
@@ -941,11 +879,6 @@ namespace DerasaX.Infrastructure.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SecurityQuestions_TenantId",
-                table: "SecurityQuestions",
-                column: "TenantId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Student_GradeId",
                 table: "Student",
                 column: "GradeId");
@@ -974,6 +907,11 @@ namespace DerasaX.Infrastructure.Migrations
                 name: "IX_studentLessonProgresses_TenantId",
                 table: "studentLessonProgresses",
                 column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_subjects_GradeId",
+                table: "subjects",
+                column: "GradeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_subjects_TenantId",
@@ -1043,9 +981,6 @@ namespace DerasaX.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "gradeSubjects");
-
-            migrationBuilder.DropTable(
                 name: "lessonMaterials");
 
             migrationBuilder.DropTable(
@@ -1106,13 +1041,7 @@ namespace DerasaX.Infrastructure.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "grades");
-
-            migrationBuilder.DropTable(
                 name: "lessons");
-
-            migrationBuilder.DropTable(
-                name: "SecurityQuestions");
 
             migrationBuilder.DropTable(
                 name: "tenants");
@@ -1122,6 +1051,9 @@ namespace DerasaX.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "subjects");
+
+            migrationBuilder.DropTable(
+                name: "grades");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DerasaX.Domain.Entities.Models;
+using DerasaX.Domain.Enums;
 using DerasaX.Infrastructure.DbHelper.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,13 +24,13 @@ namespace DerasaX.Api.SeedData
             var jsonFolderPath = Path.Combine(baseRootPath, "JsonFile");
             
             // Seed Tenants
-            await SeedFile<Tenant>(Path.Combine(jsonFolderPath, "tenants.json"), _context.tenants);
+            await SeedFile<Tenant>(Path.Combine(jsonFolderPath, "tenants.json"), _context.tenants, t => t.Id);
 
             await SeedAdmin();
             await SeedTeachers();
 
             // Seed Grades
-            await SeedFile<Grade>(Path.Combine(jsonFolderPath, "grades.json"), _context.grades);
+            await SeedFile<Grade>(Path.Combine(jsonFolderPath, "grades.json"), _context.grades, t => t.Id);
 
             // Seed Students
             await SeedStudents(Path.Combine(jsonFolderPath, "students.json"));
@@ -47,18 +48,73 @@ namespace DerasaX.Api.SeedData
             }
         }
 
-        private async Task SeedFile<T>(string path, DbSet<T> dbSet) where T : class
+        //private async Task SeedFile<T>(string path, DbSet<T> dbSet) where T : class
+        //{
+        //    if (await dbSet.AnyAsync()) return;
+        //    var data = await File.ReadAllTextAsync(path);
+        //    var items = JsonSerializer.Deserialize<List<T>>(data);
+        //    if (items != null)
+        //    {
+        //        await dbSet.AddRangeAsync(items);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //}
+        private async Task SeedFile<T>(string path,DbSet<T> dbSet,Func<T, object> keySelector) where T : class
         {
-            if (await dbSet.AnyAsync()) return;
             var data = await File.ReadAllTextAsync(path);
             var items = JsonSerializer.Deserialize<List<T>>(data);
-            if (items != null)
+
+            if (items == null) return;
+
+            var existingItems = await dbSet.ToListAsync();
+
+            foreach (var item in items)
             {
-                await dbSet.AddRangeAsync(items);
-                await _context.SaveChangesAsync();
+                var key = keySelector(item);
+
+                bool exists = existingItems.Any(e => keySelector(e).Equals(key));
+
+                if (!exists)
+                {
+                    await dbSet.AddAsync(item);
+                }
             }
+
+            await _context.SaveChangesAsync();
         }
-       
+
+        //private async Task SeedStudents(string path)
+        //{
+        //    if (await _context.students.AnyAsync()) return;
+
+        //    var data = await File.ReadAllTextAsync(path);
+
+        //    var students = JsonSerializer.Deserialize<List<Student>>(data);
+
+        //    if (students == null) return;
+
+        //    foreach (var s in students)
+        //    {
+
+
+        //        // 1- Create Identity User
+        //        var result = await _userManager.CreateAsync(s, "P@ssword123");
+
+        //        if (!result.Succeeded)
+        //            continue;
+
+        //        // 2- Assign Role
+        //        await _userManager.AddToRoleAsync(s, "Student");
+
+        //        // 3- TPT mapping
+        //        _context.students.Add(new Student
+        //        {
+        //            Id = s.Id
+        //        });
+        //    }
+
+        //    await _context.SaveChangesAsync();
+        //}
         private async Task SeedStudents(string path)
         {
             if (await _context.students.AnyAsync()) return;
@@ -71,22 +127,33 @@ namespace DerasaX.Api.SeedData
 
             foreach (var s in students)
             {
-                
-
                 // 1- Create Identity User
-                var result = await _userManager.CreateAsync(s, "P@ssword123");
+                var user = new ApplicationUser
+                {
+                    UserName = s.UserName,
+                    FullName = s.FullName,
+                    LoginCode = s.LoginCode,
+                    Gender = s.Gender,
+                    TenantId = s.TenantId
+                };
+
+                var result = await _userManager.CreateAsync(user, "P@ssword123");
 
                 if (!result.Succeeded)
                     continue;
 
                 // 2- Assign Role
-                await _userManager.AddToRoleAsync(s, "Student");
+                await _userManager.AddToRoleAsync(user, "Student");
 
-                // 3- TPT mapping
-                _context.students.Add(new Student
+                // 3- Create Domain Student (link only)
+                if (!await _context.students.AnyAsync(x => x.Id == user.Id))
                 {
-                    Id = s.Id
-                });
+                    _context.students.Add(new Student
+                    {
+                        Id = user.Id,
+                        GradeId = s.GradeId
+                    });
+                }
             }
 
             await _context.SaveChangesAsync();
@@ -119,33 +186,7 @@ namespace DerasaX.Api.SeedData
 
             await _context.SaveChangesAsync();
         }
-        //private async Task SeedTeachers()
-        //{
-        //    if (await _context.teachers.AnyAsync()) return;
 
-        //    var teacher = new ApplicationUser
-        //    {
-        //        UserName = "teacher1",
-        //        FullName = "Ahmed",
-        //        LoginCode = "TEACH001",
-        //        TenantId = "tenant-1",
-        //        Gender =(Domain.Enums.Gender?)1,
-        //    };
-
-        //    var result = await _userManager.CreateAsync(teacher, "Teacher@123");
-
-        //    if (!result.Succeeded)
-        //        return;
-
-        //    await _userManager.AddToRoleAsync(teacher, "teachers");
-
-        //    _context.teachers.Add(new Teacher
-        //    {
-        //        Id = teacher.Id
-        //    });
-
-        //    await _context.SaveChangesAsync();
-        //}
         private async Task SeedTeachers()
         {
             var userName = "malak";

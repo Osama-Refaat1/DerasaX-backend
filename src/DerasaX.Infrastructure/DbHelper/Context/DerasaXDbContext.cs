@@ -40,8 +40,6 @@ namespace DerasaX.Infrastructure.DbHelper.Context
                      .HasIndex("TenantId");
                 }
             }
-           
-            //builder.Entity<GradeSubject>().HasIndex(gs => new { gs.GradeId, gs.SubjectId, gs.TenantId }).IsUnique();
         }
         public DbSet<Announcement> announcements { get; set; }
         public DbSet<ApplicationUser> applicationUsers { get; set; }
@@ -52,7 +50,6 @@ namespace DerasaX.Infrastructure.DbHelper.Context
         public DbSet<SchoolAdmin> SchoolAdmin { get; set; }
         public DbSet<Unit> units { get; set; }
         public DbSet<Grade> grades { get; set; }
-        public DbSet<GradeSubject> gradeSubjects { get; set; }
         public DbSet<Lesson> lessons { get; set; }
         public DbSet<LessonMaterial> lessonMaterials { get; set; }
         public DbSet<Notification> notifications { get; set; }

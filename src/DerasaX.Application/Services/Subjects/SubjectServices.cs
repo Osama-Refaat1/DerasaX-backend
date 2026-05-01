@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DerasaX.Application.Dto.LessonDto;
 using DerasaX.Application.Dto.SubjectDto;
 using DerasaX.Application.Services.Abstractions.Subject;
 using DerasaX.Application.Services.Image.FileServices;
@@ -85,6 +86,27 @@ namespace DerasaX.Application.Services.Subjects
                 Success = true,
                 StatusCode = 200,
                 Message = "Subject retrieved successfully."
+            };
+        }
+        public async Task<ApiResponse<IEnumerable<ReadSubjectDto>>> GetSubjectsByGradeIdAsync(string gradeId)
+        {
+            var tenantId = GetTenantId();
+            if (string.IsNullOrEmpty(tenantId))
+                throw new UnauthorizedException("Tenant is missing.");
+
+            var subjectSpecification = new SubjectsSpecification(gradeId, tenantId, true);
+            var subjects = await _unitOfWork.Repository<Subject, string>().GetAllWithSpecAsync(subjectSpecification);
+            if (!subjects.Any())
+            {
+                _logger.LogError($"No subjects found in unit with ID {gradeId}.");
+                throw new NotFoundException($"No subjects found in unit with ID {gradeId}.");
+            }
+            var subjectDtos = _mapper.Map<IEnumerable<ReadSubjectDto>>(subjects);
+            return new ApiResponse<IEnumerable<ReadSubjectDto>>(subjectDtos)
+            {
+                Success = true,
+                StatusCode = 200,
+                Message = "Subjects retrieved successfully."
             };
         }
         public async Task<ApiResponse<ReadSubjectDto>> AddSubjectAsync(AddSubjectDto addSubjectDto)
@@ -233,5 +255,7 @@ namespace DerasaX.Application.Services.Subjects
                 Message = "Subject deleted successfully."
             };
         }
+
+       
     }
 }
