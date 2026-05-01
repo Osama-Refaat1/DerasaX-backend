@@ -1,8 +1,10 @@
 ﻿using DerasaX.Application.Services.Abstractions.Account;
+using DerasaX.Application.Services.Abstractions.Grade;
 using DerasaX.Application.Services.Abstractions.Lesson;
 using DerasaX.Application.Services.Abstractions.Subject;
 using DerasaX.Application.Services.Abstractions.Unit;
 using DerasaX.Application.Services.Account;
+using DerasaX.Application.Services.Grades;
 using DerasaX.Application.Services.Image.FileServices;
 using DerasaX.Application.Services.Lessons;
 using DerasaX.Application.Services.Subjects;
@@ -44,10 +46,10 @@ namespace DerasaX.Application.Extensions
         public static IServiceCollection RegisterApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAccountServices, AccountServices>();
-            
             services.AddScoped<ISubjectServices, SubjectServices>();
             services.AddScoped<IUnitServices, UnitServices>();
             services.AddScoped<ILessonServices, LessonServices>();
+            services.AddScoped<IGradeServices, GradeServices>();
             services.AddScoped<IFileService, FileService>();
             return services;
         }

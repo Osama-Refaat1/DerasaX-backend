@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DerasaX.Infrastructure.Migrations
 {
     [DbContext(typeof(DerasaXDbContext))]
-    [Migration("20260322225913_init")]
+    [Migration("20260501144732_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -123,12 +123,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("SecurityAnswerHash")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("SecurityQuestionId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -152,8 +146,6 @@ namespace DerasaX.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("SecurityQuestionId");
-
                     b.HasIndex("TenantId");
 
                     b.ToTable("AspNetUsers", (string)null);
@@ -169,11 +161,11 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("TenantId")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("gradeType")
-                        .IsRequired()
+                    b.Property<string>("TenantId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -181,36 +173,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("grades");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.GradeSubject", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("GradeId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SubjectId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("TenantId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("gradeSubjects");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Lesson", b =>
@@ -561,31 +523,6 @@ namespace DerasaX.Infrastructure.Migrations
                     b.ToTable("quizSubmissions");
                 });
 
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.SecurityQuestion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Question")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("TenantId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("SecurityQuestions");
-                });
-
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.StudentInsight", b =>
                 {
                     b.Property<string>("Id")
@@ -674,6 +611,10 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<string>("GradeId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
@@ -688,6 +629,8 @@ namespace DerasaX.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GradeId");
 
                     b.HasIndex("TenantId");
 
@@ -1018,10 +961,6 @@ namespace DerasaX.Infrastructure.Migrations
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("DerasaX.Domain.Entities.Models.SecurityQuestion", "SecurityQuestion")
-                        .WithMany()
-                        .HasForeignKey("SecurityQuestionId");
-
                     b.HasOne("DerasaX.Domain.Entities.Models.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
@@ -1060,30 +999,9 @@ namespace DerasaX.Infrastructure.Migrations
                                 .HasForeignKey("ApplicationUserId");
                         });
 
-                    b.Navigation("SecurityQuestion");
-
                     b.Navigation("Tenant");
 
                     b.Navigation("refreshTokens");
-                });
-
-            modelBuilder.Entity("DerasaX.Domain.Entities.Models.GradeSubject", b =>
-                {
-                    b.HasOne("DerasaX.Domain.Entities.Models.Grade", "Grade")
-                        .WithMany("GradeSubjects")
-                        .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DerasaX.Domain.Entities.Models.Subject", "Subject")
-                        .WithMany("GradeSubjects")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Grade");
-
-                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Lesson", b =>
@@ -1219,6 +1137,17 @@ namespace DerasaX.Infrastructure.Migrations
                     b.Navigation("Lesson");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("DerasaX.Domain.Entities.Models.Subject", b =>
+                {
+                    b.HasOne("DerasaX.Domain.Entities.Models.Grade", "grade")
+                        .WithMany("subjects")
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("grade");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.SubmissionAnswer", b =>
@@ -1383,9 +1312,9 @@ namespace DerasaX.Infrastructure.Migrations
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Grade", b =>
                 {
-                    b.Navigation("GradeSubjects");
-
                     b.Navigation("students");
+
+                    b.Navigation("subjects");
                 });
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Lesson", b =>
@@ -1423,8 +1352,6 @@ namespace DerasaX.Infrastructure.Migrations
 
             modelBuilder.Entity("DerasaX.Domain.Entities.Models.Subject", b =>
                 {
-                    b.Navigation("GradeSubjects");
-
                     b.Navigation("Units");
                 });
 

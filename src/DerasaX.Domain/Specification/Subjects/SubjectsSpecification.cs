@@ -28,10 +28,13 @@ namespace DerasaX.Domain.Specification.Subjects
         {
             ApplyInclude();
         }
-
+        public SubjectsSpecification(string gradeId, string tenantId, bool byGrade)
+         : base(x => x.GradeId == gradeId && x.TenantId == tenantId)
+        {
+            ApplyInclude();
+        }
         private void ApplyInclude()
         {
-            AddInclude(x => x.GradeSubjects);
             AddInclude(x => x.Units);
         }
     }

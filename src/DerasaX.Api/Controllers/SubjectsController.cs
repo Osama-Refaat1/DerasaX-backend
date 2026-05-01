@@ -41,6 +41,17 @@ namespace DerasaX.Api.Controllers
 
             return Ok(subject);
         }
+        [HttpGet("GetSubjectsByGradeIdAsync")]
+        //[AllowAnonymous] // Public endpoint 
+        public async Task<IActionResult> GetSubjectsByGradeIdAsync(string id)
+        {
+            _logger.LogInformation("Geting Subjects By Grade Id : {GradeId}", id);
+
+            var result = await _subjectServices.GetSubjectsByGradeIdAsync(id);
+
+            _logger.LogInformation("Successfully retrieved Subjects for Grade ID: {GradeId}", id);
+            return Ok(result);
+        }
         [HttpPost("AddSubject")]
         public async Task<IActionResult> AddSubject([FromForm] AddSubjectDto addSubjectDto)
         {
