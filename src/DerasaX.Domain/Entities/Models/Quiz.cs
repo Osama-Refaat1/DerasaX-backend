@@ -14,9 +14,13 @@ namespace DerasaX.Domain.Entities.Models
         public DifficultyLevel Difficulty { get; set; } = DifficultyLevel.Core;
         public DateTime? DueDate { get; set; }
         public int TimeLimitMinutes { get; set; } = 30;
-        [ForeignKey("Lesson")]
-        public string LessonId { get; set; }
-        public Lesson Lesson { get; set; }
+        public QuizType Type { get; set; } = QuizType.Lesson;
+
+        public string? LessonId { get; set; }
+        public Lesson? Lesson { get; set; }
+
+        public string? SubjectId { get; set; }
+        public Subject? Subject { get; set; }
         public ICollection<Question> Questions { get; set; } = new HashSet<Question>();
         public ICollection<QuizSubmission> QuizSubmissions { get; set; } = new HashSet<QuizSubmission>();
     }
