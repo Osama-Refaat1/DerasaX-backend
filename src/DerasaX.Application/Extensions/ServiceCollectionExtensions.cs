@@ -2,6 +2,7 @@
 using DerasaX.Application.Services.Abstractions.Grade;
 using DerasaX.Application.Services.Abstractions.Lesson;
 using DerasaX.Application.Services.Abstractions.LessonMaterial;
+using DerasaX.Application.Services.Abstractions.Quiz;
 using DerasaX.Application.Services.Abstractions.Subject;
 using DerasaX.Application.Services.Abstractions.Unit;
 using DerasaX.Application.Services.Account;
@@ -9,6 +10,7 @@ using DerasaX.Application.Services.Grades;
 using DerasaX.Application.Services.Image.FileServices;
 using DerasaX.Application.Services.LessonMaterials;
 using DerasaX.Application.Services.Lessons;
+using DerasaX.Application.Services.Quizzes;
 using DerasaX.Application.Services.Subjects;
 using DerasaX.Application.Services.Subjects.Mapping;
 using DerasaX.Application.Services.Units;
@@ -53,6 +55,7 @@ namespace DerasaX.Application.Extensions
             services.AddScoped<ILessonServices, LessonServices>();
             services.AddScoped<IGradeServices, GradeServices>();
             services.AddScoped<ILessonMaterialServicess, LessonMaterialServices>();
+            services.AddScoped<IQuizServices, QuizServices>();
             services.AddScoped<IFileService, FileService>();
             return services;
         }
